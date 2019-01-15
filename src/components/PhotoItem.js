@@ -59,14 +59,14 @@ class PhotoHeader extends Component {
     return (
       <header className="foto-header">
         <figure className="foto-usuario">
-          <img src="https://cdn.dribbble.com/users/75924/avatars/mini/d46dc6f0108af6ed345bf7fa274a748b.png?1440271468" alt="foto do usuario"/>
+          <img src={this.props.photo.urlPerfil} alt="foto do usuario"/>
           <figcaption className="foto-usuario">
             <a href="#">
-              alots
+              {this.props.photo.loginUsuario}
             </a>  
           </figcaption>
         </figure>
-        <time className="foto-data">03/10/2016 20:13</time>
+        <time className="foto-data">{this.props.photo.horario}</time>
       </header>
     );
   }
@@ -77,9 +77,9 @@ export default class PhotoItem extends Component {
   render() {
     return (
       <div className="foto">
-          <PhotoHeader/>
+          <PhotoHeader photo={this.props.photo}/>
 
-          <img alt="foto" className="foto-src" src="https://images.pexels.com/photos/373912/pexels-photo-373912.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"/>
+          <img alt="foto" className="foto-src" src={this.props.photo.urlFoto}/>
 
           <PhotoInfo/>
 
