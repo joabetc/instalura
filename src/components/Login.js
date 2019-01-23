@@ -8,7 +8,7 @@ export default class Login extends Component {
   }
 
   send(event) {
-    event.prevendDefault();
+    event.preventDefault();
 
     const requestInfo = {
       method: 'POST',
@@ -24,13 +24,16 @@ export default class Login extends Component {
     fetch('https://instalura-api.herokuapp.com/api/public/login', requestInfo)
       .then(response => {
         if (response.ok) {
-          return response.text()
+          return response.text();
         } else {
-          this.setState({message: 'It was not possible to login!'})
+          throw new Error('It was not possible to login!')
         }
       })
       .then(token => {
         console.log(token);
+      })
+      .catch(error => {
+        this.setState({message: error.message});
       })
   }
 
