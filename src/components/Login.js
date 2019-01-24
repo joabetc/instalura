@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { browserHistory } from 'react-router';
 
 export default class Login extends Component {
 
@@ -30,7 +31,7 @@ export default class Login extends Component {
         }
       })
       .then(token => {
-        console.log(token);
+        browserHistory.push('/timeline');
       })
       .catch(error => {
         this.setState({message: error.message});
