@@ -5,6 +5,7 @@ import './css/timeline.css';
 import './css/login.css';
 import App from './App';
 import Login from './components/Login';
+import Logout from './components/Logout';
 import { Router, Route, browserHistory } from 'react-router';
 import * as serviceWorker from './serviceWorker';
 
@@ -18,6 +19,7 @@ ReactDOM.render(
   <Router history={browserHistory}>
     <Route path="/" component={Login}/>
     <Route path="/timeline" component={App} onEnter={verifyAuthentication}/>
+    <Route path="/logout" component={Logout}/>
   </Router>,
   document.getElementById('root'));
 
