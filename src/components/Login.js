@@ -22,6 +22,8 @@ export default class Login extends Component {
       })
     };
 
+    //browserHistory.push('/timeline');
+    
     fetch('https://instalura-api.herokuapp.com/api/public/login', requestInfo)
       .then(response => {
         if (response.ok) {
@@ -31,11 +33,12 @@ export default class Login extends Component {
         }
       })
       .then(token => {
+        localStorage.setItem('auth-token', token)
         browserHistory.push('/timeline');
       })
       .catch(error => {
         this.setState({message: error.message});
-      })
+      });
   }
 
   render() {
