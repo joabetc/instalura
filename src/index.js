@@ -8,10 +8,16 @@ import Login from './components/Login';
 import { Router, Route, browserHistory } from 'react-router';
 import * as serviceWorker from './serviceWorker';
 
+function verifyAuthentication(nextState, replace) {
+  if (localStorage.getItem('auth-token') === null) {
+    replace('/?msg=You need to be logged in to access this url');
+  }
+}
+
 ReactDOM.render(
   <Router history={browserHistory}>
     <Route path="/" component={Login}/>
-    <Route path="/timeline" component={App}/>
+    <Route path="/timeline" component={App} onEnter={verifyAuthentication}/>
   </Router>,
   document.getElementById('root'));
 
