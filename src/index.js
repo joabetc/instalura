@@ -7,10 +7,14 @@ import App from './App';
 import Login from './components/Login';
 import Logout from './components/Logout';
 import { Router, Route, browserHistory } from 'react-router';
+import { matchPattern } from 'react-router/lib/PatternUtils';
 import * as serviceWorker from './serviceWorker';
 
 function verifyAuthentication(nextState, replace) {
-  if (localStorage.getItem('auth-token') === null) {
+
+  const result = matchPattern('/timeline(/:login)', nextState.location.pathname);
+  const privateAddress = result.paramValues[0] == undefined;
+  if (privateAddress && localStorage.getItem('auth-token') === null) {
     replace('/?msg=You need to be logged in to access this url');
   }
 }
