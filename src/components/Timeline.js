@@ -8,7 +8,14 @@ export default class Timeline extends Component {
     this.state = { photos: [] };
   }
   componentDidMount() {
-    fetch(`https://instalura-api.herokuapp.com/api/public/fotos?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`)
+    let profileURL;
+    if (this.props.login === undefined) {
+      profileURL = `https://instalura-api.herokuapp.com/api/public/fotos?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`;
+    } else {
+      profileURL = `https://instalura-api.herokuapp.com/api/public/fotos/${this.props.login}`;
+    }
+
+    fetch(profileURL)
       .then(response => response.json())
       .then(photos => {
         this.setState({
@@ -20,9 +27,7 @@ export default class Timeline extends Component {
   render() {
     return (
       <div className="fotos container">
-        {
-          this.state.photos.map(photo => <PhotoItem key={photo.id} photo={photo}/>)
-        }
+        {this.state.photos.map(photo => <PhotoItem key={photo.id} photo={photo}/>)}
       </div>
     );
   }
