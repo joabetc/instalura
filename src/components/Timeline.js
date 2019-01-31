@@ -7,14 +7,15 @@ export default class Timeline extends Component {
     super();
     this.state = { photos: [] };
   }
-  componentDidMount() {
+
+  loadPhotos(props) {
     let profileURL;
-    if (this.props.login === undefined) {
+    if (props.login === undefined) {
       profileURL = `https://instalura-api.herokuapp.com/api/public/fotos?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`;
     } else {
-      profileURL = `https://instalura-api.herokuapp.com/api/public/fotos/${this.props.login}`;
+      profileURL = `https://instalura-api.herokuapp.com/api/public/fotos/${props.login}`;
     }
-
+  
     fetch(profileURL)
       .then(response => response.json())
       .then(photos => {
@@ -22,6 +23,16 @@ export default class Timeline extends Component {
           photos: photos
         });
       });
+  }
+
+  componentDidMount() {
+    this.loadPhotos(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.login !== undefined) {
+      this.loadPhotos(nextProps);
+    }
   }
 
   render() {
