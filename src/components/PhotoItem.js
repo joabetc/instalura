@@ -23,7 +23,7 @@ class PhotoUpdates extends Component {
       }
     }).then(liker => {
       this.setState({ liked: !this.state.liked });
-      PubSub.publish('update-liker', {photoId: this.props.photo.id, liker });
+      Pubsub.publish('update-liker', {photoId: this.props.photo.id, liker });
     });
   }
 
@@ -43,7 +43,7 @@ class PhotoUpdates extends Component {
 class PhotoInfo extends Component {
 
   componentDidMount() {
-    PubSub.subscribe('update-liker', (topic, likerInfo) => {
+    Pubsub.subscribe('update-liker', (topic, likerInfo) => {
       console.log(likerInfo);
     });
   }
