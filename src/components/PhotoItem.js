@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import { Pubsub } from 'pubsub-js';
 
 class PhotoUpdates extends Component {
 
@@ -22,7 +23,8 @@ class PhotoUpdates extends Component {
       }
     }).then(liker => {
       this.setState({ liked: !this.state.liked });
-    })
+      PubSub.publish('update-liker', {photoId: this.props.photo.id, liker });
+    });
   }
 
   render() {
@@ -39,6 +41,12 @@ class PhotoUpdates extends Component {
 }
 
 class PhotoInfo extends Component {
+
+  componentDidMount() {
+    PubSub.subscribe('update-liker', (topic, likerInfo) => {
+      console.log(likerInfo);
+    });
+  }
 
   render() {
     return (
