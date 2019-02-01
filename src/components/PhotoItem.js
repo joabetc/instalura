@@ -3,10 +3,32 @@ import { Link } from 'react-router';
 
 class PhotoUpdates extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = { liked: this.props.photo.likeada };
+  }
+
+  like(event) {
+    event.preventDefault();
+
+    fetch(
+      `https://instalura-api.herokuapp.com/api/public/fotos/${this.props.photo.id}/like?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,
+      { method: 'POST' }
+    ).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('It was not possible to like the photo!');
+      }
+    }).then(liker => {
+      this.setState({ liked: !this.state.liked });
+    })
+  }
+
   render() {
     return (
       <section className="fotoAtualizacoes">
-        <a href="#" className="fotoAtualizacoes-like">Likar</a>
+        <a onClick={this.like.bind(this)} href="#" className={this.state.liked ? 'fotoAtualizacoes-like-ativo' : 'fotoAtualizacoes-like'}>Likar</a>
         <form className="fotoAtualizacoes-form">
           <input type="text" placeholder="Adicione um comentário..." className="fotoAtualizacoes-form-campo"/>
           <input type="submit" value="Comentar!" className="fotoAtualizacoes-form-submit"/>
@@ -80,7 +102,7 @@ export default class PhotoItem extends Component {
 
           <PhotoInfo photo={this.props.photo}/>
 
-          <PhotoUpdates/>
+          <PhotoUpdates photo={this.props.photo}/>
         </div>
     );
   }
