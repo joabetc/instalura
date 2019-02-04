@@ -42,9 +42,23 @@ class PhotoUpdates extends Component {
 
 class PhotoInfo extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = { likers: this.props.photo.likers };
+  }
+
   componentDidMount() {
     Pubsub.subscribe('update-liker', (topic, likerInfo) => {
-      console.log(likerInfo);
+      if (this.props.photo.id === likerInfo.photoId) {
+        const possibleLiker = this.state.likers.find(liker => liker.login === likerInfo.liker.login);
+        if (possibleLiker === undefined) {
+          const newLikers = this.state.likers.concat(likerInfo.liker);
+          this.setState({likers: newLikers});
+        } else {
+          const newLikers = this.state.likers.filter(liker => liker.login !== likerInfo.liker.login);
+          this.setState({likers: newLikers});
+        }
+      }
     });
   }
 
@@ -53,7 +67,7 @@ class PhotoInfo extends Component {
       <div className="foto-info">
         <div className="foto-info-likes">
           {
-            this.props.photo.likers.map(liker => {
+            this.state.likers.map(liker => {
               return (<Link key={liker.login} href={`/timeline/${liker.login}`}>{liker.login},</Link>);
             })
           }
