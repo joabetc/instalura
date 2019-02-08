@@ -45,6 +45,43 @@ export default class Timeline extends Component {
     }
   }
 
+  like(photoId) {
+    fetch(
+      `https://instalura-api.herokuapp.com/api/public/fotos/${photoId}/like?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,
+      { method: 'POST' }
+    ).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('It was not possible to like the photo!');
+      }
+    }).then(liker => {
+      PubSub.publish('update-liker', { photoId, liker });
+    });
+  }
+
+  createComment(photoId, commentText) {
+    const requestInfo = {
+      method: 'POST',
+      body: JSON.stringify({ texto: commentText }),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    }
+
+    fetch(`https://instalura-api.herokuapp.com/api/public/fotos/${photoId}/comment?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,
+        requestInfo
+    ).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('It was not possible to comment!');
+      }
+    }).then(comment => {
+      PubSub.publish('new-comments' , { photoId, comment })
+    });
+  }
+
   render() {
     return (
       <div className="fotos container">
@@ -52,7 +89,7 @@ export default class Timeline extends Component {
           transitionName="timeline"
           transitionEnterTimeout={500}
           transitionLeaveTimeout={300}>
-        {this.state.photos.map(photo => <PhotoItem key={photo.id} photo={photo}/>)}
+        {this.state.photos.map(photo => <PhotoItem key={photo.id} photo={photo} like={this.like} createComment={this.createComment}/>)}
       </ReactCSSTransitionGroup>
       </div>
     );

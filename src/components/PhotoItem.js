@@ -12,44 +12,13 @@ class PhotoUpdates extends Component {
 
   like(event) {
     event.preventDefault();
-
-    fetch(
-      `https://instalura-api.herokuapp.com/api/public/fotos/${this.props.photo.id}/like?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,
-      { method: 'POST' }
-    ).then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('It was not possible to like the photo!');
-      }
-    }).then(liker => {
-      this.setState({ liked: !this.state.liked });
-      Pubsub.publish('update-liker', { photoId: this.props.photo.id, liker });
-    });
+    this.setState({ liked: !this.state.liked });
+    this.props.like(this.props.photo.id);
   }
 
   createComment(event) {
     event.preventDefault();
-
-    const requestInfo = {
-      method: 'POST',
-      body: JSON.stringify({ texto: this.comment.value }),
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
-    }
-
-    fetch(`https://instalura-api.herokuapp.com/api/public/fotos/${this.props.photo.id}/comment?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,
-        requestInfo
-    ).then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('It was not possible to comment!');
-      }
-    }).then(comment => {
-      Pubsub.publish('new-comments' , { photoId: this.props.photo.id, comment })
-    });
+    this.props.createComment(this.props.photo.id, this.comment.value);
   }
 
   render() {
@@ -159,7 +128,7 @@ export default class PhotoItem extends Component {
 
           <PhotoInfo photo={this.props.photo}/>
 
-          <PhotoUpdates photo={this.props.photo}/>
+          <PhotoUpdates photo={this.props.photo} like={this.props.like} createComment={this.props.createComment}/>
         </div>
     );
   }
