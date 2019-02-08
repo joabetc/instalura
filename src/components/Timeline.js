@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PhotoItem from './PhotoItem';
+import PubSub from 'pubsub-js';
 
 export default class Timeline extends Component {
 
@@ -7,6 +8,12 @@ export default class Timeline extends Component {
     super(props);
     this.state = { photos: [] };
     this.login = this.props.login;
+  }
+
+  componentWillMount() {
+    PubSub.subscribe('timeline', (topic, photos) => {
+      this.setState({photos});
+    })
   }
 
   loadPhotos() {
