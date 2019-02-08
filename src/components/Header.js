@@ -20,7 +20,7 @@ export default class Header extends Component {
           </h1>
 
            <form className="header-busca" onSubmit={this.search.bind(this)}>
-            <input type="text" name="search" placeholder="Pesquisa" className="header-busca-campo" ref={this.searchedLogin = input}/>
+            <input type="text" name="search" placeholder="Pesquisa" className="header-busca-campo" ref={input => this.searchedLogin = input}/>
             <input type="submit" value="Buscar" className="header-busca-submit"/>
           </form>
 
