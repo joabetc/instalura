@@ -15,6 +15,25 @@ export default class Timeline extends Component {
     PubSub.subscribe('timeline', (topic, photos) => {
       this.setState({photos});
     });
+
+    PubSub.subscribe('update-liker', (topic, likerInfo) => {
+      const foundPhoto = this.state.photos.find(photo => photo.id === likerInfo.photoId);
+      foundPhoto.liked = foundPhoto.liked;
+      const possibleLiker = foundPhoto.likers.find(liker => liker.login === likerInfo.liker.login);
+      if (possibleLiker === undefined) {
+        foundPhoto.likers.push(likerInfo.liker);
+      } else {
+        const newLikers = foundPhoto.likers.filter(liker => liker.login !== likerInfo.liker.login);
+        foundPhoto.likers = newLikers;
+      }
+      this.setState({photos: this.state.photos});
+    });
+
+    PubSub.subscribe('new-comments', (topic, commentInfo) => {
+      const foundPhoto = this.state.photos.find(photo => photo.id === commentInfo.photoId);
+      const newComments = this.state.comments.push(commentInfo.comment);
+      this.setState({photos: this.state.photos});
+    });
   }
 
   loadPhotos() {
