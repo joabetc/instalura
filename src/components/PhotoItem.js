@@ -128,7 +128,7 @@ export default class PhotoItem extends Component {
 
           <PhotoInfo photo={this.props.photo}/>
 
-          <PhotoUpdates photo={this.props.photo} like={this.props.like} createComment={this.props.createComment}/>
+          <PhotoUpdates {...this.props}/>
         </div>
     );
   }
