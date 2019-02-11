@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PhotoItem from './PhotoItem';
 import PubSub from 'pubsub-js';
 import ReactCSSTransitionGroup from 'react';
+import TimelineBO from '../business/TimelineBO';
 
 export default class Timeline extends Component {
 
@@ -9,24 +10,12 @@ export default class Timeline extends Component {
     super(props);
     this.state = { photos: [] };
     this.login = this.props.login;
+    this.timelineBO = new TimelineBO([]);
   }
 
   componentWillMount() {
     PubSub.subscribe('timeline', (topic, photos) => {
       this.setState({photos});
-    });
-
-    PubSub.subscribe('update-liker', (topic, likerInfo) => {
-      const foundPhoto = this.state.photos.find(photo => photo.id === likerInfo.photoId);
-      foundPhoto.liked = foundPhoto.liked;
-      const possibleLiker = foundPhoto.likers.find(liker => liker.login === likerInfo.liker.login);
-      if (possibleLiker === undefined) {
-        foundPhoto.likers.push(likerInfo.liker);
-      } else {
-        const newLikers = foundPhoto.likers.filter(liker => liker.login !== likerInfo.liker.login);
-        foundPhoto.likers = newLikers;
-      }
-      this.setState({photos: this.state.photos});
     });
 
     PubSub.subscribe('new-comments', (topic, commentInfo) => {
@@ -50,6 +39,7 @@ export default class Timeline extends Component {
         this.setState({
           photos: photos
         });
+        this.timelineBO = new TimelineBO(photos);
       });
   }
 
@@ -65,18 +55,7 @@ export default class Timeline extends Component {
   }
 
   like(photoId) {
-    fetch(
-      `https://instalura-api.herokuapp.com/api/public/fotos/${photoId}/like?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,
-      { method: 'POST' }
-    ).then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('It was not possible to like the photo!');
-      }
-    }).then(liker => {
-      PubSub.publish('update-liker', { photoId, liker });
-    });
+    this.timelineBO.like(photoId);
   }
 
   createComment(photoId, commentText) {
@@ -108,7 +87,7 @@ export default class Timeline extends Component {
           transitionName="timeline"
           transitionEnterTimeout={500}
           transitionLeaveTimeout={300}>
-        {this.state.photos.map(photo => <PhotoItem key={photo.id} photo={photo} like={this.like} createComment={this.createComment}/>)}
+        {this.state.photos.map(photo => <PhotoItem key={photo.id} photo={photo} like={this.like.bind(this)} createComment={this.createComment}/>)}
       </ReactCSSTransitionGroup>
       </div>
     );
