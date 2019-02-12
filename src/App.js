@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Header from './components/Header';
 import Timeline from './components/Timeline';
-import TimelineBO from './business/TimelineBO';
+import TimelineStore from './business/TimelineStore';
 
-this.timelineBO = new TimelineBO([]);
+this.timelineStore = new TimelineStore([]);
 
 class App extends Component {
   render() {
@@ -11,7 +11,7 @@ class App extends Component {
       <div id="root">
         <div className="main">
           <Header/>
-          <Timeline login={this.props.params.login} bo={this.timelineBO}/>
+          <Timeline login={this.props.params.login} store={this.timelineStore}/>
         </div>
     </div>
     );
