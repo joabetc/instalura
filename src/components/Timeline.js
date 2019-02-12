@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PhotoItem from './PhotoItem';
 import ReactCSSTransitionGroup from 'react';
+import TimelineApi from '../business/TimelineAPI';
 
 export default class Timeline extends Component {
 
@@ -23,9 +24,8 @@ export default class Timeline extends Component {
     } else {
       profileURL = `https://instalura-api.herokuapp.com/api/public/fotos/${this.login}`;
     }
-    const fixedList = [{}];
-    this.props.store.dispatch({type: 'list', photos: fixedList});
-    //this.props.store.list(profileURL);
+    
+    TimelineApi.list(profileURL, this.props.store);
   }
 
   componentDidMount() {

@@ -1,18 +1,8 @@
 import React, { Component } from 'react';
 import Header from './components/Header';
 import Timeline from './components/Timeline';
-import TimelineStore from './business/TimelineStore';
 import { createStore } from 'redux';
-
-const timelineStore = new TimelineStore([]);
-
-function timeline(state = [], action) {
-  if (action.type === 'list') {
-    return action.photos;
-  }
-
-  return state;
-}
+import { timeline } from './reducers/timeline';
 
 const store = createStore(timeline);
 
