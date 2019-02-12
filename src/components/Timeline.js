@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PhotoItem from './PhotoItem';
 import ReactCSSTransitionGroup from 'react';
-import TimelineBO from '../business/TimelineBO';
 
 export default class Timeline extends Component {
 
@@ -9,11 +8,10 @@ export default class Timeline extends Component {
     super(props);
     this.state = { photos: [] };
     this.login = this.props.login;
-    this.timelineBO = new TimelineBO([]);
   }
 
   componentWillMount() {
-    this.timelineBO.subscribe(photos => {
+    this.props.timelineBO.subscribe(photos => {
       this.setState({photos});
     });
   }
@@ -26,7 +24,7 @@ export default class Timeline extends Component {
       profileURL = `https://instalura-api.herokuapp.com/api/public/fotos/${this.login}`;
     }
 
-    this.timelineBO.list(profileURL);
+    this.props.timelineBO.list(profileURL);
   }
 
   componentDidMount() {
@@ -41,11 +39,11 @@ export default class Timeline extends Component {
   }
 
   like(photoId) {
-    this.timelineBO.like(photoId);
+    this.props.timelineBO.like(photoId);
   }
 
   createComment(photoId, commentText) {
-    this.timelineBO.createComment(photoId, commentText);
+    this.props.timelineBO.createComment(photoId, commentText);
   }
 
   render() {
