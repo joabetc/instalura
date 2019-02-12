@@ -11,8 +11,8 @@ export default class Timeline extends Component {
   }
 
   componentWillMount() {
-    this.props.store.subscribe(photos => {
-      this.setState({photos});
+    this.props.store.subscribe(() => {
+      this.setState({photos: this.props.store.getState()});
     });
   }
 
@@ -23,8 +23,9 @@ export default class Timeline extends Component {
     } else {
       profileURL = `https://instalura-api.herokuapp.com/api/public/fotos/${this.login}`;
     }
-
-    this.props.store.list(profileURL);
+    const fixedList = [{}];
+    this.props.store.dispatch({type: 'list', photos: fixedList});
+    //this.props.store.list(profileURL);
   }
 
   componentDidMount() {
