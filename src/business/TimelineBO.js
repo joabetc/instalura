@@ -29,4 +29,43 @@ export default class TimelineBO {
       PubSub.publish('timeline', this.photos);
     });
   }
+
+  createComment(photoId, commentText) {
+    const requestInfo = {
+      method: 'POST',
+      body: JSON.stringify({ texto: commentText }),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    }
+
+    fetch(`https://instalura-api.herokuapp.com/api/public/fotos/${photoId}/comment?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,
+        requestInfo
+    ).then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('It was not possible to comment!');
+      }
+    }).then(comment => {
+      const foundPhoto = this.photos.find(photo => photo.id === photoId);
+      foundPhoto.comments.push(comment);
+      PubSub.publish('timeline', this.photos);
+    });
+  }
+
+  list(profileURL) {
+    fetch(profileURL)
+      .then(response => response.json())
+      .then(photos => {
+        this.photos = photos;
+        PubSub.publish('timeline', this.photos);
+      });
+  }
+
+  subscribe(callback) {
+    PubSub.subscribe('timeline', (topic, photos) => {
+      callback(photos);
+    });
+  }
 }
