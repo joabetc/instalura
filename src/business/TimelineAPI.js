@@ -37,7 +37,7 @@ export default class TimelineAPI {
       headers: new Headers({
         'Content-Type': 'application/json'
       })
-    }
+    };
 
     fetch(`https://instalura-api.herokuapp.com/api/public/fotos/${photoId}/comment?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,
         requestInfo
@@ -54,12 +54,15 @@ export default class TimelineAPI {
     });
   }
 
-  static list(profileURL, store) {
-    fetch(profileURL)
-      .then(response => response.json())
-      .then(photos => {
-        store.dispatch({type: 'list', photos});
-      });
+  static list(profileURL) {
+    return dispatch => {
+      fetch(profileURL)
+        .then(response => response.json())
+        .then(photos => {
+          dispatch({type: 'list', photos});
+          return photos;
+        });
+    }
   }
 
   subscribe(callback) {

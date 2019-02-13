@@ -24,8 +24,7 @@ export default class Timeline extends Component {
     } else {
       profileURL = `https://instalura-api.herokuapp.com/api/public/fotos/${this.login}`;
     }
-    
-    TimelineApi.list(profileURL, this.props.store);
+    this.props.store.dispatch(TimelineApi.list(profileURL));
   }
 
   componentDidMount() {
