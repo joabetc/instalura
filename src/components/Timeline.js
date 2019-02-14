@@ -43,7 +43,7 @@ export default class Timeline extends Component {
   }
 
   createComment(photoId, commentText) {
-    this.props.timelineBO.createComment(photoId, commentText);
+    this.props.store.dispatch(TimelineApi.createComment(photoId, commentText));
   }
 
   render() {

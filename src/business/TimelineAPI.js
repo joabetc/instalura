@@ -30,28 +30,28 @@ export default class TimelineAPI {
     });
   }
 
-  createComment(photoId, commentText) {
-    const requestInfo = {
-      method: 'POST',
-      body: JSON.stringify({ texto: commentText }),
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
-    };
-
-    fetch(`https://instalura-api.herokuapp.com/api/public/fotos/${photoId}/comment?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,
-        requestInfo
-    ).then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('It was not possible to comment!');
-      }
-    }).then(comment => {
-      const foundPhoto = this.photos.find(photo => photo.id === photoId);
-      foundPhoto.comments.push(comment);
-      PubSub.publish('timeline', this.photos);
-    });
+  static createComment(photoId, commentText) {
+    return dispatch => {
+      const requestInfo = {
+        method: 'POST',
+        body: JSON.stringify({ texto: commentText }),
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      };
+  
+      fetch(`https://instalura-api.herokuapp.com/api/public/fotos/${photoId}/comment?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,
+          requestInfo
+      ).then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('It was not possible to comment!');
+        }
+      }).then(comment => {
+        dispatch({type: 'comment', photoId, comment});
+      });
+    }
   }
 
   static list(profileURL) {
