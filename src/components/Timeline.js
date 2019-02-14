@@ -39,7 +39,7 @@ export default class Timeline extends Component {
   }
 
   like(photoId) {
-    this.props.timelineBO.like(photoId);
+    this.props.store.dispatch(TimelineApi.like(photoId));
   }
 
   createComment(photoId, commentText) {
