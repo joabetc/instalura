@@ -1,5 +1,3 @@
-import PubSub from 'pubsub-js';
-
 export default class TimelineAPI {
 
   static like(photoId) {
