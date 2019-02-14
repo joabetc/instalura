@@ -2,10 +2,6 @@ import PubSub from 'pubsub-js';
 
 export default class TimelineAPI {
 
-  constructor(photos) {
-    this.photos = photos;
-  }
-
   static like(photoId) {
     return dispatch => {
       fetch(
@@ -58,11 +54,5 @@ export default class TimelineAPI {
           return photos;
         });
     }
-  }
-
-  subscribe(callback) {
-    PubSub.subscribe('timeline', (topic, photos) => {
-      callback(photos);
-    });
   }
 }
