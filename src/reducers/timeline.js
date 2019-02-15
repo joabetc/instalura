@@ -19,17 +19,23 @@ export function timeline(state = [], action) {
 
   if (action.type === 'like') {
     const liker = action.liker;
-    const foundPhoto = state.find(photo => photo.id === action.photoId);
-    foundPhoto.liked = foundPhoto.liked;
-    const possibleLiker = foundPhoto.likers.find(currentLiker => currentLiker.login === liker.login);
+    const oldStatePhoto = state.find(photo => photo.id === action.photoId);
+    oldStatePhoto.liked = oldStatePhoto.liked;
+    const possibleLiker = oldStatePhoto.likers.find(currentLiker => currentLiker.login === liker.login);
+
+    let newLikers;
     if (possibleLiker === undefined) {
-      foundPhoto.likers.push(liker);
+      newLikers =  oldStatePhoto.likers.push(liker);
     } else {
-      const newLikers = foundPhoto.likers.filter(currentLiker => currentLiker.login !== liker.login);
-      foundPhoto.likers = newLikers;
+      newLikers = oldStatePhoto.likers.filter(currentLiker => currentLiker.login !== liker.login);
     }
 
-    return state;
+    const newStatePhoto = Object.assign({}, oldStatePhoto, {likers: newLikers});
+    const listIndex = state.findIndex(photo => photo.id === action.photoId);
+
+    const newList = state.set(listIndex, newStatePhoto);
+
+    return newList;
   }
 
   return state;
