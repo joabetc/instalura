@@ -1,13 +1,20 @@
+import {List} from 'immutable';
+
 export function timeline(state = [], action) {
   if (action.type === 'list') {
-    return action.photos;
+    return List(action.photos);
   }
 
   if (action.type === 'comnent') {
-    const foundPhoto = state.find(photo => photo.id === action.photoId);
-    foundPhoto.comments.push(action.comment);
+    const oldStatePhoto = state.find(photo => photo.id === action.photoId);
+    const newComments = oldStatePhoto.comments.concat(action.comment);
     
-    return state;
+    const newStatePhoto = Object.assign({}, oldStatePhoto, {comments: newComments});
+    const listIndex = state.findIndex(photo => photo.id === action.photoId);
+
+    const newList = state.set(listIndex, newStatePhoto);
+
+    return newList;
   }
 
   if (action.type === 'like') {
