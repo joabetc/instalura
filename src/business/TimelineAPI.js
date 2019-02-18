@@ -1,3 +1,4 @@
+import {list, like, comments} from '../actions/actionCreator';
 export default class TimelineAPI {
 
   static like(photoId) {
@@ -12,7 +13,7 @@ export default class TimelineAPI {
           throw new Error('It was not possible to like the photo!');
         }
       }).then(liker => {
-        dispatch({type: 'like', photoId, liker});
+        dispatch(like(photoId, liker));
         return liker;
       });
     }
@@ -37,7 +38,7 @@ export default class TimelineAPI {
           throw new Error('It was not possible to comment!');
         }
       }).then(comment => {
-        dispatch({type: 'comment', photoId, comment});
+        dispatch(comments(photoId, comment));
         return comment;
       });
     }
@@ -48,7 +49,7 @@ export default class TimelineAPI {
       fetch(profileURL)
         .then(response => response.json())
         .then(photos => {
-          dispatch({type: 'list', photos});
+          dispatch(list(photos));
           return photos;
         });
     }
