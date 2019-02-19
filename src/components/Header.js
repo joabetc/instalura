@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-import PubSub from 'pubsub-js';
+import TimelineAPI from '../business/TimelineAPI';
 
 export default class Header extends Component {
 
   search(event) {
     event.preventDefault();
-    fetch(`https://instalura-api.herokuapp.com/api/public/fotos/${this.searchedLogin.value}}`)
-      .then(response => response.json())
-      .then(photos => {
-        PubSub.publish('timeline', photos);
-      });
+    this.props.store.dispatch(TimelineAPI.search(this.searchedLogin.value));
   }
 
   render() {

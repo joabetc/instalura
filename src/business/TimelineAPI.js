@@ -1,4 +1,5 @@
-import {list, like, comments} from '../actions/actionCreator';
+import {list, like, comments, notify} from '../actions/actionCreator';
+
 export default class TimelineAPI {
 
   static like(photoId) {
@@ -52,6 +53,20 @@ export default class TimelineAPI {
           dispatch(list(photos));
           return photos;
         });
+    }
+  }
+
+  static search(login) {
+    return dispatch => {
+      fetch(`https://instalura-api.herokuapp.com/api/public/fotos/${login}}`)
+      .then(response => response.json())
+      .then(photos => {
+        if (photos.length === 0) {
+          dispatch(notify('User not found!'));
+        }
+        dispatch(list(photos));
+        return photos;
+      });
     }
   }
 }
