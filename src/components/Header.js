@@ -3,6 +3,17 @@ import TimelineAPI from '../business/TimelineAPI';
 
 export default class Header extends Component {
 
+  constructor() {
+    super();
+    this.state = {message: ''};
+  }
+
+  componentDidMount() {
+    this.props.store.subscribe(() => {
+      this.setState({message: this.props.store.getState().notify});
+    });
+  }
+
   search(event) {
     event.preventDefault();
     this.props.store.dispatch(TimelineAPI.search(this.searchedLogin.value));
@@ -24,6 +35,7 @@ export default class Header extends Component {
            <nav>
             <ul className="header-nav">
               <li className="header-nav-item">
+                <span>{this.state.message}</span>
                 <a href="#">
                   ♡
                   {/*                 ♥ */}

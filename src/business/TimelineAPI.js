@@ -63,7 +63,10 @@ export default class TimelineAPI {
       .then(photos => {
         if (photos.length === 0) {
           dispatch(notify('User not found!'));
+        } else {
+          dispatch(notify(''));
         }
+
         dispatch(list(photos));
         return photos;
       });
