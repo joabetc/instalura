@@ -10,8 +10,14 @@ import { Router, Route, browserHistory } from 'react-router';
 import { matchPattern } from 'react-router/lib/PatternUtils';
 import * as serviceWorker from './serviceWorker';
 
-function verifyAuthentication(nextState, replace) {
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { timeline } from './reducers/timeline';
+import { notify } from './reducers/header';
+import { Provider } from 'react-redux';
 
+function verifyAuthentication(nextState, replace) {
+  
   const result = matchPattern('/timeline(/:login)', nextState.location.pathname);
   const privateAddress = result.paramValues[0] == undefined;
   if (privateAddress && localStorage.getItem('auth-token') === null) {
@@ -19,12 +25,19 @@ function verifyAuthentication(nextState, replace) {
   }
 }
 
+const reducers = combineReducers({timeline, notify});
+const store = createStore(reducers, applyMiddleware(thunkMiddleware));
+
 ReactDOM.render(
-  <Router history={browserHistory}>
-    <Route path="/" component={Login}/>
-    <Route path="/timeline(/:login)" component={App} onEnter={verifyAuthentication}/>
-    <Route path="/logout" component={Logout}/>
-  </Router>,
+  (
+    <Provider store={store}>
+      <Router history={browserHistory}>
+        <Route path="/" component={Login}/>
+        <Route path="/timeline(/:login)" component={App} onEnter={verifyAuthentication}/>
+        <Route path="/logout" component={Logout}/>
+      </Router>
+    </Provider>
+  ),
   document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
